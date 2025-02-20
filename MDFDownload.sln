@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34114.132
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "MDF_DOWNLOAD", "MDF_DOWNLOAD\MDF_DOWNLOAD.pyproj", "{FD9A293C-B6E2-4B63-9C50-31C7396E8102}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "MDFDownload", "MDF_DOWNLOAD\MDFDownload.pyproj", "{FD9A293C-B6E2-4B63-9C50-31C7396E8102}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,5 +16,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BFAC827B-BB6C-4163-A90C-7D53071A820C}
 	EndGlobalSection
 EndGlobal

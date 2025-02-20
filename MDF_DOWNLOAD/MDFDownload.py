@@ -14,8 +14,32 @@ from datetime import datetime
 import pandas as pd
 import zipfile
 import os
+import logging
+from logging.handlers import RotatingFileHandler
 
 class DCCConnect:
+
+
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+
+    logging.basicConfig(
+        filename="app.log",  # 로그 파일 경로
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        encoding="utf-8"  # UTF-8 인코딩 설정 (한글 깨짐 방지)
+    )
+    logging.info("이것은 파일에 저장되는 로그입니다.")
+
+    logger = logging.getLogger("RotatingLogger")
+    logger.setLevel(logging.INFO)
+
+    # 최대 1MB 크기로 3개 파일까지 유지
+    file_handler = RotatingFileHandler("app.log", maxBytes=1_000_000, backupCount=3, encoding="utf-8")
+    file_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
+
+    logger.addHandler(file_handler)
+
+    logger.info("이 로그는 파일 크기 제한이 적용된 로그입니다.")
 
     global conn
     global username
@@ -35,10 +59,41 @@ class DCCConnect:
         self.API_URL = "https://pilot.carmedialab.com/DccResultDataAccess/rest/results"
         self.cursor = self.conn.cursor(pymysql.cursors.DictCursor)
         self.data_links = []
-        self.getMdfFileUUIDList()
-        self.getMDFfile()
+        self.get_MdfFileUUIDList()
+        self.get_allMDF()
+#       self.get_MDFfile()
 
-    def getMdfFileUUIDList(self):
+
+    """
+       DCC server 에 있는 모든 mdf4 파일 리스트를 가져온다. 
+    """
+    def get_allMDF(self):
+
+        print("[INFO] GET MDF file all list from DCC SERVER.")
+        response = requests.get(self.API_URL,auth=HTTPBasicAuth(self.username,self.password))
+
+        try:
+            if response.status_code == 200:
+                result = response.text()
+
+                if result.uuid not in self.data_links:
+                    self.insert_files(result)
+
+                print("[INFO] GET MDF file all list from DCC SERVER.")
+            else:
+                print("[INFO] Failed MDF file list get from DCC SERVER.")
+
+        except Exception as e:
+           print(f"[ERROR] GET MDF file all list from DCC SERVER.{e}")
+
+    def insert_files(self, result):
+        insert_sql = "SELECT * FROM mdfparser.tbl_dcc_files WHERE download_yn <> 'Y'"
+        insert_val = (
+            
+            )
+        self.cursor.execute(insert_sql)
+
+    def get_MdfFileUUIDList(self):
 
         select_file_sql = "SELECT * FROM mdfparser.tbl_dcc_files WHERE download_yn <> 'Y'"
             
@@ -48,7 +103,7 @@ class DCCConnect:
         for file in results:
             self.data_links.append(file)
 
-    def getMDFfile(self):
+    def get_MDFfile(self):
         print("[INFO] getMDFfile from DCC_Client")
 
         if(len(self.data_links)):
@@ -58,9 +113,8 @@ class DCCConnect:
                 if(response.status_code == 200):
                     file_path = self.download_path+"/"+data_link['obu']+"_"+data_link['vin']+"_"+data_link['measurement_uuid']+".zip"
                     with open(file_path, "wb") as file:
-                        for chunk in response.iter_content(chunk_size=8192):  # ûũ ������ �б�
+                        for chunk in response.iter_content(chunk_size=8192):
                             file.write(chunk)
-                        #print(f"���� �ٿ�ε� �Ϸ�: {self.download_path+"/"+data_link['obu']}")
 
                     download_yn = 'Y'
                     updata_file_sql = "UPDATE mdfparser.tbl_dcc_files SET download_yn = '"+download_yn+"' WHERE uuid = '"+data_link['uuid']+"'";
@@ -90,10 +144,7 @@ def get_mariadb():
 
 if __name__ == '__main__':
 
-    #DB ����
     conn = get_mariadb();
-
-    #DCC ����
     dccConnect = DCCConnect(conn)
 
 

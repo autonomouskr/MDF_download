@@ -3,13 +3,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>fd9a293c-b6e2-4b63-9c50-31c7396e8102</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
-    <StartupFile>MDF_DOWNLOAD.py</StartupFile>
+    <ProjectHome>
+    </ProjectHome>
+    <StartupFile>MDFDownload.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>MDF_DOWNLOAD</Name>
+    <Name>MDFDownload</Name>
     <RootNamespace>MDF_DOWNLOAD</RootNamespace>
     <InterpreterId>Global|PythonCore|3.8</InterpreterId>
   </PropertyGroup>
@@ -22,7 +23,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MDF_DOWNLOAD.py" />
+    <Compile Include="MDFDownload.py" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.8" />
